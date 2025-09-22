@@ -77,6 +77,7 @@ function App() {
                                         placeholder="이름을 입력해 주세요."
                                         value={name}
                                         onChange={(event) => setName(event.target.value)}
+                                        required
                                         isInvalid={!!errors.name}
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -91,6 +92,7 @@ function App() {
                                         placeholder="이메일을 입력해 주세요."
                                         value={email}
                                         onChange={(event) => setEmail(event.target.value)}
+                                        required
                                         isInvalid={!!errors.email}
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -105,6 +107,7 @@ function App() {
                                         placeholder="비밀번호를 입력해 주세요."
                                         value={password}
                                         onChange={(event) => setPassword(event.target.value)}
+                                        required
                                         isInvalid={!!errors.password}
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -119,6 +122,7 @@ function App() {
                                         placeholder="주소를 입력해 주세요."
                                         value={address}
                                         onChange={(event) => setAddress(event.target.value)}
+                                        required
                                         isInvalid={!!errors.address}
                                     />
                                     <Form.Control.Feedback type="invalid">

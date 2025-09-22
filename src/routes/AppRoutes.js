@@ -9,10 +9,16 @@ import Element from './../pages/Element';
 import ElementList from './../pages/ElementList';
 
 import SignupPage from './../pages/SignupPage';
+import LoginPage from './../pages/LoginPage';
+import LogoutPage from './../pages/LogoutPage';
+
 
 // 이 파일은 라우팅 정볼르 담고있는 파일
 // 이러한 파일을 네트워크에서는 routing table 이라고 함
-function App() {
+function App({ user, handleLoginSuccess, logout }) {
+    //user: 사용자 정보를 저장하고 있는 객체
+    // handleLoginSuccess: 로그인 성공시 동작할 액션
+
     return (
 
         <Routes>
@@ -26,6 +32,8 @@ function App() {
             <Route path="/element/list" element={<ElementList />} />
 
             <Route path="/member/signup" element={<SignupPage />} />
+            <Route path="/member/login" element={<LoginPage setUser={handleLoginSuccess} />} />
+            <Route path="/member/logout" element={<LogoutPage onLogout={logout} />} />
         </Routes>
 
     );
