@@ -44,7 +44,7 @@ function MenuItems({ appName, user }) {
                 <Navbar.Brand href='/'>{appName}</Navbar.Brand>
                 <Nav className="me-auto">
                     {/* 하이퍼링크 : Nav.Link는 다른 페이지로 이동할 때 사용됩니다.  */}
-                    <Nav.Link>상품 보기</Nav.Link>
+                    <Nav.Link onClick={() => navigate(`/product/list`)}>상품 보기</Nav.Link>
 
                     {/* user에 따른 분기된 메뉴를 rendering */}
                     {renderMenu()}
