@@ -13,6 +13,7 @@ import LoginPage from './../pages/LoginPage';
 import LogoutPage from './../pages/LogoutPage';
 
 import ProductList from './../pages/ProductList';
+import ProductInsertForm from './../pages/ProductInsertForm';
 
 
 // 이 파일은 라우팅 정볼르 담고있는 파일
@@ -32,6 +33,7 @@ function App({ user, handleLoginSuccess, logout }) {
 
             {/* 로그인 여부에 따라서 상품 목록 페이지가 다르게 보여야 하므로, user 프롭스를 넘겨줌 */}
             <Route path="/product/list" element={<ProductList user={user} />} />
+            <Route path="/product/insert" element={<ProductInsertForm />} />
 
             <Route path="/element" element={<Element />} />
             <Route path="/element/list" element={<ElementList />} />
