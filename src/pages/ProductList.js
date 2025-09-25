@@ -47,7 +47,7 @@ function App({ user }) {
                     size="sm"
                     onClick={(event) => {
                         event.stopPropagation();
-                        alert('수정')
+                        navigate(`/product/update/${item.id}`);
                     }}>
                     수정
                 </Button>
