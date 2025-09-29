@@ -1,0 +1,82 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button, Container, Form, Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/config";
+
+function App({ user }) {
+    const thStyle = { fontSize: '1.2rem' }; // 테이블 헤드 스타일
+
+    // 보여주고자 하는 카트 상품의 배열 정보
+    const [cartProducts, setCartProducts] = useState([]);
+
+    const navigate = useNavigate();
+
+    // 사용자의 정보가 바뀔 때 화면을 렌더링 해주어야함
+    // user?.id: Optional chaining(물음표를 적어주면 오류가 발생하지 않고 undefined를 반환) 오류 화면을 보여주지 않고 동작함
+    useEffect(() => {
+        if (user && user?.id) {
+            fetchCartProduct()
+        }
+    }), [user];
+
+    // 특정 고객이 장바구니에 담은 카트상품 목록을 조회합니다.
+    const fetchCartProduct = async () => {
+        try {
+            const url = `${API_BASE_URL}/cart/list/${user.id}`;
+            const response = await axios.get(url);
+            console.log('카트 상품 조회 결과');
+            console.log(response.data);
+
+            setCartProducts(response.data || []);
+
+        } catch (error) {
+            console.log('오류정보');
+            console.log(error);
+            alert(`'카트 상품' 정보가 존재하지 않아서 상품 목록 페이지로 이동합니다.`);
+            navigate('/product/list');
+        }
+    };
+
+    return (
+        <Container className="mt-4">
+            <h2 className="mb-4" >
+                {/* 숫자rem은 주위 글꼴의 숫자배를 의미 */}
+                <span style={{ color: 'blue', fontSize: '2rem' }}>{user?.name}</span>
+                <span style={{ fontSize: '1.3rem' }}>님의 장바구니</span>
+            </h2>
+            <Table striped bordered>
+                <thead>
+                    <tr>
+                        <th style={thStyle}>
+                            <Form.Check
+                                type="checkBox"
+                                label="전체 선택"
+                                onChange={``}
+                            />
+
+                        </th>
+                        <th style={thStyle}>상품 정보</th>
+                        <th style={thStyle}>수량</th>
+                        <th style={thStyle}>금액</th>
+                        <th style={thStyle}>삭제</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>xx</td>
+                    </tr>
+                </tbody>
+            </Table>
+            {/* text-end 우측 정렬, text-start 좌측 정렬, text-center 가운데 정렬 */}
+            <h3 className="text-end mt-3">총 주문금액: 0원</h3>
+            <div className="text-end">
+                <Button variant="primary" size="lg" onClick={``}>
+                    주문하기
+                </Button>
+            </div>
+        </Container>
+    );
+}
+
+export default App;
