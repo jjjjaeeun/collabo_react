@@ -17,6 +17,7 @@ import ProductInsertForm from './../pages/ProductInsertForm';
 import ProductUpdateForm from './../pages/ProductUpdateForm';
 import ProductDetail from './../pages/ProductDetail';
 import CartList from './../pages/CartList';
+import OrdersList from './../pages/OrdersList';
 
 
 // 이 파일은 라우팅 정볼르 담고있는 파일
@@ -44,6 +45,7 @@ function App({ user, handleLoginSuccess, logout }) {
             {/* 미로그인시 장바구니와 구매하기 기능은 선택이 불가능하게함, user를 프롭스로 넘겨주기 */}
             <Route path="/product/detail/:id" element={<ProductDetail user={user} />} />
             <Route path="/cart/list" element={<CartList user={user} />} />
+            <Route path="/orders/list" element={<OrdersList user={user} />} />
 
             <Route path="/element" element={<Element />} />
             <Route path="/element/list" element={<ElementList />} />

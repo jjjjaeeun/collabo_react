@@ -24,7 +24,7 @@ function MenuItems({ appName, user }) {
                 return (
                     <>
                         <Nav.Link onClick={() => navigate(`/cart/list`)}>장바구니</Nav.Link>
-                        <Nav.Link onClick={() => navigate(``)}>주문 내역</Nav.Link>
+                        <Nav.Link onClick={() => navigate(`/orders/list`)}>주문 내역</Nav.Link>
                         <Nav.Link onClick={() => navigate(`/member/logout`)}>로그아웃</Nav.Link>
                     </>
                 );

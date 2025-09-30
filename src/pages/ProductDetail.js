@@ -20,7 +20,7 @@ function App({ user }) {
     const navigate = useNavigate();
 
     // 장바구니 관련 코딩들
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
 
     // 파라미터 id가 갱신이 되면 화면을 다시 rendering 시킴
     useEffect(() => {
@@ -103,6 +103,45 @@ function App({ user }) {
         }
     }
 
+    // 사용자가 주문하기 버튼을 클릭함
+    const buyNow = async () => {
+
+        if (quantity < 1) {
+            alert('수량을 1개 이상 선택해 주셔야합니다.');
+            return;
+        }
+
+        try {
+            const url = `${API_BASE_URL}/order`;
+
+            // 스프링부트의 OrderDto, OderItemDto 클래스와 연관이 있음
+            // 주의) parameters 작성시 Key의 이름은 OrderDto의 변수 이름과 동일하게 작성해야함
+            // 상세보기 페이지에서는 무조건 1개의 상품만 주문할 수 있음
+            const parameters = {
+                memberId: user.id,
+                status: 'PENDING',
+                orderItems: [{
+                    productId: product.id,
+                    quantity: quantity
+                }]
+
+            };
+
+            console.log('주문할 데이터 정보', parameters)
+            console.log(parameters);
+
+            const response = await axios.post(url, parameters);
+            console.log(response.data);
+            alert(`${product.name} ${quantity}개를 주문하였습니다.`);
+
+            navigate(`/product/list`); // 목록 페이지로 이동
+
+        } catch (error) {
+            console.log('주문하기 동작 오류')
+            console.log(error);
+        };
+    };
+
     return (
         <Container className="my-4">
             <Card>
@@ -181,7 +220,15 @@ function App({ user }) {
                                 >
                                     장바구니
                                 </Button>
-                                <Button variant="danger" className="me-3 px-4">
+                                <Button variant="danger" className="me-3 px-4" onClick={() => {
+                                    if (!user) {
+                                        alert('로그인이 필요한 서비스입니다.');
+                                        return navigate('/member/login');
+                                    } else {
+                                        buyNow();
+                                    }
+                                }}
+                                >
                                     구매하기
                                 </Button>
                             </div>

@@ -134,6 +134,83 @@ function App({ user }) {
         }
     };
 
+    // 선택된 항목의 카트 상품 아이디를 이용하여 해당 품목을 목록에서 배제합니다.
+    const deleteCartProduct = async (cartProductId) => {
+        const isConfirmed = window.confirm('해당 카트 상품을 정말로 삭제하시겠습니다?')
+        if (isConfirmed) {
+            console.log('삭제할 카트 상품 아이디: ' + cartProductId)
+
+            try {
+                const url = `${API_BASE_URL}/cart/delete/${cartProductId}`;
+                const response = await axios.delete(url);
+
+                // 카트 상품 목록을 갱신하고, 요금을 다시 계산합니다.
+                setCartProducts((precious) => {
+                    const updatedProducts = precious.filter((bean) => bean.cartProductId !== cartProductId);
+
+                    refreshOrderTotalPrice(updatedProducts);
+                    return updatedProducts;
+                })
+
+                alert(response.data)
+
+            } catch (error) {
+                console.log('카트상품 삭제 동작 오류');
+                console.log(error);
+            }
+
+        } else {
+            alert('카트상품 삭제를 취소하셨습니다.');
+        }
+    };
+
+    // 사용자가 주문하기 버튼을 클릭함
+    const makeOrder = async () => {
+        // 체크 박스가 on 상태인 것만 필터링함
+        const selectedProducts = cartProducts.filter((bean) => bean.checked)
+        if (selectedProducts.length === 0) {
+            alert('주문할 상품을 선택해 주세요.');
+            return;
+        }
+
+        try {
+            const url = `${API_BASE_URL}/order`;
+
+            // 스프링부트의 OrderDto, OderItemDto 클래스와 연관이 있음
+            // 주의) parameters 작성시 Key의 이름은 OrderDto의 변수 이름과 동일하게 작성해야함
+            const parameters = {
+                memberId: user.id,
+                status: 'PENDING',
+                orderItems: selectedProducts.map((product) => ({
+                    cartProductId: product.cartProductId,
+                    productId: product.productId,
+                    quantity: product.quantity
+
+                }))
+
+            };
+
+            console.log('주문할 데이터 정보', parameters)
+            console.log(parameters);
+
+            const response = await axios.post(url, parameters);
+            alert(response.data);
+
+            // 방금 주문한 품목은 장바구니 목록에서 제거
+            setCartProducts((previous) =>
+                previous.filter((product) => !product.checked) // 주문한 상품 제거하기
+            );
+
+            setOrderTotalPrice(0); // 총 주문금액 초기화
+
+
+        } catch (error) {
+            console.log('주문하기 동작 오류')
+            console.log(error);
+        };
+
+    };
+
     return (
         <Container className="mt-4">
             <h2 className="mb-4" >
@@ -206,7 +283,7 @@ function App({ user }) {
                                 </td>
                                 <td className="text-center align-middle">
                                     <Button variant="danger" size="sm"
-                                        onClick={``}
+                                        onClick={() => deleteCartProduct(product.cartProductId)}
                                     >
                                         삭제
                                     </Button>
@@ -223,7 +300,7 @@ function App({ user }) {
             {/* text-end 우측 정렬, text-start 좌측 정렬, text-center 가운데 정렬 */}
             <h3 className="text-end mt-3">총 주문금액: {orderTotalPrice.toLocaleString()}원</h3>
             <div className="text-end">
-                <Button variant="primary" size="lg" onClick={``}>
+                <Button variant="primary" size="lg" onClick={makeOrder}>
                     주문하기
                 </Button>
             </div>
