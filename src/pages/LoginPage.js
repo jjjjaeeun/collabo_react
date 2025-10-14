@@ -22,10 +22,26 @@ function LoginPage({ setUser }) {
 
         try {
             const url = `${API_BASE_URL}/member/login`;
-            const parameters = { email, password };
+            // const parameters = { email, password };
+
+            // //스프링 부트가 넘겨 주는 정보는 Map<String, Object> 타입임.
+            // const response = await axios.post(url, parameters);
+
+            // axios는 기본값으로 json 형식을 전송하지만 시큐리티가 이를 처리하지 못함
+            // 대신 form-urlencoded 타입으로 전송해줘야함
+            // URLSearchParams는 자바 스크립트에서 QueryString를 다루기 위한 내장 객체
+            const parameters = new URLSearchParams();
+            parameters.append('email', email);
+            parameters.append('password', password);
 
             //스프링 부트가 넘겨 주는 정보는 Map<String, Object> 타입임.
-            const response = await axios.post(url, parameters);
+            const response = await axios.post(url, parameters, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                withCredentials: true // 세션 기반 인증시 필수 
+            });
+
 
             // message에는 '로그인 성공 여부'를 알리는 내용, member에는 로그인 한 사람의 객체 정보가 반환.
             const { message, member } = response.data;

@@ -304,6 +304,8 @@ function App({ user }) {
                     맨처음
                 </Pagination.First>
                 <Pagination.Prev
+
+
                     onClick={() => {
                         const gotoPage = paging.beginPage - 1;
                         console.log(`Prev 버튼 클릭(${gotoPage} 페이지로 이동)`);
