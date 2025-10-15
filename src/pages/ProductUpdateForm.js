@@ -56,7 +56,7 @@ SubmitAction 함수
     과거에 업로드 했던 이전 이미지를 삭제해야함
 */
 
-function App() {
+function App({ user }) {
     const { id } = useParams();
     console.log(`수정할 상품 번호: ${id}`);
 
@@ -71,9 +71,15 @@ function App() {
 
     // id를 이용하여 기존에 입력한 상품 정보를 가져오기
     useEffect(() => {
+
+        if (!user || user.role !== 'ADMIN') {
+            alert(`${comment}기능은 관리자만 접근이 가능합니다.`);
+            navigate('/');
+        }
+
         const url = `${API_BASE_URL}/product/update/${id}`;
 
-        axios.get(url)
+        axios.get(url, { withCredentials: true })
             .then((response) => {
                 setProduct(response.data);
             })
@@ -177,7 +183,7 @@ function App() {
                         type="text"
                         placeholder="이름을 입력해 주세요."
                         name="name"
-                        value={product.name}
+                        value={product.name || ''}
                         onChange={ControlChange}
                         required
                     />
@@ -189,7 +195,7 @@ function App() {
                         type="text"
                         placeholder="가격을 입력해 주세요."
                         name="price"
-                        value={product.price}
+                        value={product.price || ''}
                         onChange={ControlChange}
                         required
                     />
@@ -200,7 +206,7 @@ function App() {
 
                     <Form.Select
                         name="category"
-                        value={product.category}
+                        value={product.category || ''}
                         onChange={ControlChange}
                         required>
 
@@ -218,7 +224,7 @@ function App() {
                         type="text"
                         placeholder="재고를 입력해 주세요."
                         name="stock"
-                        value={product.stock}
+                        value={product.stock || ''}
                         onChange={ControlChange}
                         required
                     />

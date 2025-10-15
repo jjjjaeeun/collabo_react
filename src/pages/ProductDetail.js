@@ -24,16 +24,31 @@ function App({ user }) {
 
     // 파라미터 id가 갱신이 되면 화면을 다시 rendering 시킴
     useEffect(() => {
+        if (!user) {
+            alert('로그인이 필요한 서비스입니다.');
+            navigate('/member/login');
+            return;
+        }
         const url = `${API_BASE_URL}/product/detail/${id}`;
-        axios.get(url)
+
+        axios.get(url, { withCredentials: true }) // 쿠키, 세션 포함 옵션
+
             .then((response) => {
+
                 setProduct(response.data);
                 setLoading(false); // 상품 정보를 읽어왔다는 뜻
             })
-            .catch((error) => {
-                console.log(error);
-                alert('상품 정보를 불러오는 중에 오류가 발생하였습니다.')
-                navigate(-1); // 이전 페이지로 이동
+
+            .catch((error) => { // 401(UnAuthrized)
+                if (error.response && error.response.status === 401) {
+                    alert('로그인이 필요한 서비스입니다.');
+                    navigate('/member/login'); // 로그인 페이지로 리다이렉트
+                } else {
+                    console.log(error);
+                    alert('상품 정보를 불러오는 중에 오류가 발생하였습니다.')
+                    navigate(-1); // 이전 페이지로 이동
+                }
+
 
             });
     }, [id]);
@@ -87,7 +102,7 @@ function App({ user }) {
                 quantity: quantity
             };
 
-            const response = await axios.post(url, parameters);
+            const response = await axios.post(url, parameters, { withCredentials: true });
 
             alert(response.data);
             navigate('/product/list'); // 상품 목록 페이지로 이동
@@ -130,7 +145,7 @@ function App({ user }) {
             console.log('주문할 데이터 정보', parameters)
             console.log(parameters);
 
-            const response = await axios.post(url, parameters);
+            const response = await axios.post(url, parameters, { withCredentials: true });
             console.log(response.data);
             alert(`${product.name} ${quantity}개를 주문하였습니다.`);
 

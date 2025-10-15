@@ -27,7 +27,7 @@ function App({ user }) {
     const fetchCartProduct = async () => {
         try {
             const url = `${API_BASE_URL}/cart/list/${user.id}`;
-            const response = await axios.get(url);
+            const response = await axios.get(url, { withCredentials: true });
             console.log('카트 상품 조회 결과');
             console.log(response.data);
 
